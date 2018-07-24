@@ -1,17 +1,6 @@
-<?php
+<?php 
 
-/***
-* e-Pasien from version 0.1 Beta
-* Last modified: 05 July 2018
-* Author : drg. Faisol Basoro
-* Email : dentix.id@gmail.com
-*
-* File : index.php
-* Description : Pengaduan page
-* Licence under GPL
-***/
-
-include_once ('layout/header.php');
+include_once ('layout/header.php'); 
 
 ?>
 

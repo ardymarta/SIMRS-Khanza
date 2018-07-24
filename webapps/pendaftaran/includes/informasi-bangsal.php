@@ -1,16 +1,5 @@
 <?php
 
-/***
-* e-Pasien from version 0.1 Beta
-* Last modified: 05 July 2018
-* Author : drg. Faisol Basoro
-* Email : dentix.id@gmail.com
-*
-* File : includes/informasi-bangsal.php
-* Description : Datatable ajax file for room infromation
-* Licence under GPL
-***/
-
 ob_start();
 session_start();
 
@@ -32,7 +21,7 @@ $table = <<<EOT
             AND statusdata='1'
             AND status='ISI'
         ) AS isi
-    ,   (
+    ,   (    
             SELECT COUNT(*)
             FROM   kamar
             WHERE  kd_bangsal = nama.kd_bangsal

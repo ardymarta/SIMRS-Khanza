@@ -1,19 +1,4 @@
-<?php
-
-/***
-* e-Pasien from version 0.1 Beta
-* Last modified: 05 July 2018
-* Author : drg. Faisol Basoro
-* Email : dentix.id@gmail.com
-*
-* File : informasi-kamar.php
-* Description : Room information
-* Licence under GPL
-***/
-
-include_once ('layout/header.php');
-
-?>
+<?php include_once ('layout/header.php'); ?>
 
     <section class="content">
         <div class="container-fluid">
@@ -27,7 +12,7 @@ include_once ('layout/header.php');
                     <div class="card">
                         <div class="header">
                             <h2>
-                                <?php echo $dayList[$day].", ".date('d')." ".$bulanList[$bulan]." ".date('Y'); ?>
+                                Tanggal : <?php echo $date; ?>
                             </h2>
                         </div>
                         <div class="body">

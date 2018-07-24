@@ -1,10 +1,10 @@
-<?php
+<?php 
 
 /***
 * e-Pasien from version 0.1 Beta
-* Last modified: 06 July 2018
+* Last modified: 06 April 2018
 * Author : drg. Faisol Basoro
-* Email : dentix.id@gmail.com
+* Email : drg.faisol@basoro.org
 *
 * File : config.php
 * Description : Main config, function and helper
@@ -18,19 +18,17 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_NAME', 'sik');
 
-$connection = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$connection = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME); 
 
-define('VERSION', '1.8 Beta');
+define('VERSION', '1.5 Beta');
 define('URL', '');
 define('DIR', '');
 define('HARIDAFTAR', '03'); // Batasi hari pendaftaran 3 hari kedepan
-define('LIMITJAM', '08:00:00'); // Batasi jam pendaftaran
-define('SIGNUP', 'DISABLE'); // ENABLE atau DISABLE pendaftaran pasien baru
-define('KODE_BERKAS', '002'); // Kode katergori berkas digital. Sesuaikan dengan kode yang ada di SIMRS.
+define('LIMITJAM', '21:00:00'); // Batasi jam pendaftaran
+define('SIGNUP', 'ENABLE'); // ENABLE atau DISABLE pendaftaran pasien baru
+define('KODE_BERKAS', '002'); // Kode katergori berkas digital
 define('UKURAN_BERKAS', '5000000'); // Ukuran berkas digital dalam byte
-define('PENGADUAN', 'ENABLE'); // ENABLE atau DISABLE fitur pengaduan pasien.
-define('PRODUCTION', 'YES'); // YES to hide error page. NO to display error page.
-define('URUTNOREG', 'DOKTER'); // DOKTER or POLI.
+define('PENGADUAN', 'ENABLE'); // ENABLE atau DISABLE fitur pengaduan pasien. Lihat file includes/pengaduan.php untuk membuat tabel pengaduannya.
 
 function escape($string) {
     global $connection;
@@ -64,7 +62,7 @@ function num_rows($result) {
 }
 
 // Get date and time
-date_default_timezone_set('Asia/Makassar');
+date_default_timezone_set('Asia/Jakarta');
 $month      = date('Y-m');
 $date       = date('Y-m-d');
 $time       = date('H:i:s');
@@ -89,33 +87,7 @@ if($hari[0]=="Sunday"){
     $namahari="SABTU";
 }
 
-$day = date('D', strtotime($date));
-$dayList = array(
-	'Sun' => 'Minggu',
-	'Mon' => 'Senin',
-	'Tue' => 'Selasa',
-	'Wed' => 'Rabu',
-	'Thu' => 'Kamis',
-	'Fri' => 'Jumat',
-	'Sat' => 'Sabtu'
-);
-$bulan = date('m', strtotime($date));
-$bulanList = array(
-	'01' => 'Januari',
-	'02' => 'Pebruari',
-	'03' => 'Maret',
-	'04' => 'April',
-	'05' => 'Mei',
-	'06' => 'Jumat',
-	'07' => 'Jumat',
-	'08' => 'Jumat',
-	'09' => 'Jumat',
-	'10' => 'Jumat',
-	'11' => 'Jumat',
-	'12' => 'Sabtu'
-);
-
-// Get settings
+// Get settings 
 $getSettings = query("SELECT * FROM setting");
 $dataSettings = fetch_assoc($getSettings);
 
