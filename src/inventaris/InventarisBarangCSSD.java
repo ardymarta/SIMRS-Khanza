@@ -16,7 +16,7 @@ import fungsi.batasInput;
 import fungsi.koneksiDB;
 import fungsi.sekuel;
 import fungsi.validasi;
-import fungsi.var;
+import fungsi.akses;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -86,14 +86,26 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
         tbSpesialis.setDefaultRenderer(Object.class, new WarnaTable());
         
         TCari.setDocument(new batasInput((byte)100).getKata(TCari));
-        if(koneksiDB.cariCepat().equals("aktif")){
+        if(koneksiDB.CARICEPAT().equals("aktif")){
             TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
                 @Override
-                public void insertUpdate(DocumentEvent e) {tampil();}
+                public void insertUpdate(DocumentEvent e) {
+                    if(TCari.getText().length()>2){
+                        tampil();
+                    }
+                }
                 @Override
-                public void removeUpdate(DocumentEvent e) {tampil();}
+                public void removeUpdate(DocumentEvent e) {
+                    if(TCari.getText().length()>2){
+                        tampil();
+                    }
+                }
                 @Override
-                public void changedUpdate(DocumentEvent e) {tampil();}
+                public void changedUpdate(DocumentEvent e) {
+                    if(TCari.getText().length()>2){
+                        tampil();
+                    }
+                }
             });
         }
         
@@ -180,7 +192,7 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
             }
         });
 
-        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Barang CSSD ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(130, 100, 100))); // NOI18N
+        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Barang CSSD ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50,50,50))); // NOI18N
         internalFrame1.setName("internalFrame1"); // NOI18N
         internalFrame1.setLayout(new java.awt.BorderLayout(1, 1));
 
@@ -198,6 +210,9 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
         tbSpesialis.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 tbSpesialisKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tbSpesialisKeyReleased(evt);
             }
         });
         Scroll.setViewportView(tbSpesialis);
@@ -218,6 +233,7 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
         BtnSimpan.setText("Simpan");
         BtnSimpan.setToolTipText("Alt+S");
         BtnSimpan.setName("BtnSimpan"); // NOI18N
+        BtnSimpan.setPreferredSize(new java.awt.Dimension(100, 30));
         BtnSimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnSimpanActionPerformed(evt);
@@ -434,7 +450,6 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
 
         KategoriBarang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Heacting Set", "Partus Set", "Set Bedah" }));
         KategoriBarang.setName("KategoriBarang"); // NOI18N
-        KategoriBarang.setOpaque(false);
         KategoriBarang.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 KategoriBarangKeyPressed(evt);
@@ -566,12 +581,7 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
 
     private void tbSpesialisKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbSpesialisKeyPressed
         if(tabMode.getRowCount()!=0){
-            if((evt.getKeyCode()==KeyEvent.VK_ENTER)||(evt.getKeyCode()==KeyEvent.VK_UP)||(evt.getKeyCode()==KeyEvent.VK_DOWN)){
-                try {
-                    getData();
-                } catch (java.lang.NullPointerException e) {
-                }
-            }else if(evt.getKeyCode()==KeyEvent.VK_SHIFT){
+            if(evt.getKeyCode()==KeyEvent.VK_SHIFT){
                 TCari.setText("");
                 TCari.requestFocus();
             }
@@ -593,7 +603,7 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
 
     private void btnInvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvActionPerformed
         inventaris.isCek();
-        inventaris.setSize(internalFrame1.getWidth()-40,internalFrame1.getHeight()-40);
+        inventaris.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
         inventaris.setLocationRelativeTo(internalFrame1);
         inventaris.setAlwaysOnTop(false);
         inventaris.setVisible(true);
@@ -610,20 +620,15 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
             BtnBatal.requestFocus();
         }else if(tabMode.getRowCount()!=0){
             Map<String, Object> param = new HashMap<>();
-            param.put("namars",var.getnamars());
-            param.put("alamatrs",var.getalamatrs());
-            param.put("kotars",var.getkabupatenrs());
-            param.put("propinsirs",var.getpropinsirs());
-            param.put("kontakrs",var.getkontakrs());
-            param.put("emailrs",var.getemailrs());
+            param.put("namars",akses.getnamars());
+            param.put("alamatrs",akses.getalamatrs());
+            param.put("kotars",akses.getkabupatenrs());
+            param.put("propinsirs",akses.getpropinsirs());
+            param.put("kontakrs",akses.getkontakrs());
+            param.put("emailrs",akses.getemailrs());
             param.put("logo",Sequel.cariGambar("select logo from setting"));
-            Valid.MyReport("rptBarangCSSD.jrxml","report","::[ Barang CSSD ]::","select inventaris.no_inventaris,inventaris_barang.kode_barang, inventaris_barang.nama_barang,"+
-                    "inventaris_ruang.nama_ruang,cssd_barang.jenis_barang from inventaris inner join inventaris_barang "+
-                    "inner join inventaris_ruang inner join cssd_barang on inventaris_barang.kode_barang=inventaris.kode_barang "+
-                    "and inventaris.id_ruang=inventaris_ruang.id_ruang and inventaris.no_inventaris=cssd_barang.no_inventaris where "+
-                    "inventaris.no_inventaris like '%"+TCari.getText().trim()+"%' or inventaris_barang.nama_barang like '%"+TCari.getText().trim()+"%' "+
-                    " or inventaris_ruang.nama_ruang like '%"+TCari.getText().trim()+"%' or "+
-                    "cssd_barang.jenis_barang like '%"+TCari.getText().trim()+"%' order by cssd_barang.jenis_barang",param);
+            param.put("parameter","%"+TCari.getText()+"%"); 
+            Valid.MyReport("rptBarangCSSD.jasper","report","::[ Barang CSSD ]::",param);
         }
         this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_BtnPrintActionPerformed
@@ -644,6 +649,17 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
     private void BtnAllKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnAllKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnAllKeyPressed
+
+    private void tbSpesialisKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbSpesialisKeyReleased
+        if(tabMode.getRowCount()!=0){
+            if((evt.getKeyCode()==KeyEvent.VK_ENTER)||(evt.getKeyCode()==KeyEvent.VK_UP)||(evt.getKeyCode()==KeyEvent.VK_DOWN)){
+                try {
+                    getData();
+                } catch (java.lang.NullPointerException e) {
+                }
+            }
+        }
+    }//GEN-LAST:event_tbSpesialisKeyReleased
 
     /**
     * @param args the command line arguments
@@ -744,8 +760,8 @@ public class InventarisBarangCSSD extends javax.swing.JDialog {
     }
     
     public void isCek(){
-        BtnSimpan.setEnabled(var.getbarang_cssd());
-        BtnHapus.setEnabled(var.getbarang_cssd());
-        BtnEdit.setEnabled(var.getbarang_cssd());
+        BtnSimpan.setEnabled(akses.getbarang_cssd());
+        BtnHapus.setEnabled(akses.getbarang_cssd());
+        BtnEdit.setEnabled(akses.getbarang_cssd());
     }
 }
