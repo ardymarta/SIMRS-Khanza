@@ -1,37 +1,43 @@
+<?php
+    if(strpos($_SERVER['REQUEST_URI'],"pages")){
+        exit(header("Location:../index.php"));
+    }
+?>
+
 <div id="post">
     <div class="entry">   
 	<form name="frm_aturadmin" onsubmit="return validasiIsi();" method="post" action="" enctype=multipart/form-data>
         <?php
                 echo "";
-                $tahunawal      =isset($_GET['tahunawal'])?$_GET['tahunawal']:NULL;
-                $bulanawal      =isset($_GET['bulanawal'])?$_GET['bulanawal']:NULL;
-                $tanggalawal    =isset($_GET['tanggalawal'])?$_GET['tanggalawal']:NULL;
-                $tahunakhir     =isset($_GET['tahunakhir'])?$_GET['tahunakhir']:NULL;
-                $bulanakhir     =isset($_GET['bulanakhir'])?$_GET['bulanakhir']:NULL;
-                $tanggalakhir   =isset($_GET['tanggalakhir'])?$_GET['tanggalakhir']:NULL;  
-                $action         =isset($_GET['action'])?$_GET['action']:NULL;
-                $no_rawat       =isset($_GET['no_rawat'])?$_GET['no_rawat']:NULL;
-                $keyword        =str_replace("_"," ",isset($_GET['keyword']))?str_replace("_"," ",$_GET['keyword']):NULL;
-                $dokter         =str_replace("_"," ",isset($_GET['dokter']))?str_replace("_"," ",$_GET['dokter']):NULL;
-                $statusdata     =str_replace("_"," ",isset($_GET['statusdata']))?str_replace("_"," ",$_GET['statusdata']):NULL;
-                $poli           =str_replace("_"," ",isset($_GET['poli']))?str_replace("_"," ",$_GET['poli']):NULL;
+                $tahunawal      = validTeks(isset($_GET['tahunawal'])?$_GET['tahunawal']:NULL);
+                $bulanawal      = validTeks(isset($_GET['bulanawal'])?$_GET['bulanawal']:NULL);
+                $tanggalawal    = validTeks(isset($_GET['tanggalawal'])?$_GET['tanggalawal']:NULL);
+                $tahunakhir     = validTeks(isset($_GET['tahunakhir'])?$_GET['tahunakhir']:NULL);
+                $bulanakhir     = validTeks(isset($_GET['bulanakhir'])?$_GET['bulanakhir']:NULL);
+                $tanggalakhir   = validTeks(isset($_GET['tanggalakhir'])?$_GET['tanggalakhir']:NULL);  
+                $action         = validTeks(isset($_GET['action'])?$_GET['action']:NULL);
+                $no_rawat       = validTeks(isset($_GET['no_rawat'])?$_GET['no_rawat']:NULL);
+                $keyword        = validTeks(str_replace("_"," ",isset($_GET['keyword']))?str_replace("_"," ",$_GET['keyword']):NULL);
+                $dokter         = validTeks(str_replace("_"," ",isset($_GET['dokter']))?str_replace("_"," ",$_GET['dokter']):NULL);
+                $statusdata     = validTeks(str_replace("_"," ",isset($_GET['statusdata']))?str_replace("_"," ",$_GET['statusdata']):NULL);
+                $poli           = validTeks(str_replace("_"," ",isset($_GET['poli']))?str_replace("_"," ",$_GET['poli']):NULL);
                 echo "<input type=hidden name=statusdata value=$statusdata><input type=hidden name=dokter value=$dokter><input type=hidden name=poli value=$poli><input type=hidden name=keyword value=$keyword>";
         ?>
     <div style="width: 100%; height: 85.4%; overflow: auto;">
     <?php        
 	$BtnCari  =isset($_POST['BtnCari'])?$_POST['BtnCari']:NULL;
         if (isset($BtnCari)) {      
-                $tahunawal      =trim($_POST['tahunawal']);
-                $bulanawal      =trim($_POST['bulanawal']);
-                $tanggalawal    =trim($_POST['tanggalawal']);
-                $tahunakhir     =trim($_POST['tahunakhir']);
-                $bulanakhir     =trim($_POST['bulanakhir']);
-                $tanggalakhir   =trim($_POST['tanggalakhir']);    
-                $dokter         =trim($_POST['dokter']);  
-                $statusdata     =trim($_POST['statusdata']);
-                $keyword        =trim($_POST['keyword']);
-                $poli           =trim($_POST['poli']);
-                $action         ="no";
+                $tahunawal      = validTeks(trim($_POST['tahunawal']));
+                $bulanawal      = validTeks(trim($_POST['bulanawal']));
+                $tanggalawal    = validTeks(trim($_POST['tanggalawal']));
+                $tahunakhir     = validTeks(trim($_POST['tahunakhir']));
+                $bulanakhir     = validTeks(trim($_POST['bulanakhir']));
+                $tanggalakhir   = validTeks(trim($_POST['tanggalakhir']));    
+                $dokter         = validTeks(trim($_POST['dokter']));  
+                $statusdata     = validTeks(trim($_POST['statusdata']));
+                $keyword        = validTeks(trim($_POST['keyword']));
+                $poli           = validTeks(trim($_POST['poli']));
+                $action         = "no";
         }
         if(empty($tahunawal)){
             $tahunawal=date('Y');
@@ -86,43 +92,130 @@
                             if(($statusdata=="Permintaan")||($statusdata=="Semua")){
                                 if($baris["stts_daftar"]=="Lama"){
                                     echo "<tr class='isi7'>
-                                            <td bgcolor='#FFFFA9' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                            <td bgcolor='#FFFFA9' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                             <td bgcolor='#FFFFA9' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                             <td bgcolor='#FFFFA9' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                             <td bgcolor='#FFFFA9' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                            <td valign='center' align='center'>
+                                            <td valign='center' align='center' rowspan='2'>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=CetakBerkasRM&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Cetak RM]</a>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kirim&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kirim]</a><br>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>                                                
                                             </td>                                
                                          </tr>";
+                                    if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                        echo "<tr class='isi8'>
+                                                <td colspan='3'>
+                                                    <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                        <tr>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>";
+                                    }else{
+                                        echo "<tr class='isi8'>
+                                                <td colspan='3'>
+                                                    <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                        <tr>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>";
+                                    }
                                 }else if($baris["stts_daftar"]=="Baru"){
                                     echo "<tr class='isi7'>
-                                            <td bgcolor='#FACC2E' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                            <td bgcolor='#FACC2E' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                             <td bgcolor='#FFFFA9' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                             <td bgcolor='#FFFFA9' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                             <td bgcolor='#FFFFA9' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                            <td valign='center' align='center'>
+                                            <td valign='center' align='center' rowspan='2'>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=CetakBerkasRM&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Cetak RM]</a>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kirim&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kirim]</a><br>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                             </td>  
                                         </tr>";
+                                    if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                        echo "<tr class='isi8'>
+                                                <td colspan='3'>
+                                                    <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                        <tr>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>";
+                                    }else{
+                                        echo "<tr class='isi8'>
+                                                <td colspan='3'>
+                                                    <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                        <tr>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>";
+                                    }
                                 }else if($baris["stts_daftar"]=="-"){
                                     echo "<tr class='isi7'>
-                                            <td bgcolor='#FFFFA9' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                            <td bgcolor='#FFFFA9' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                             <td bgcolor='#FFFFA9' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                             <td bgcolor='#FFFFA9' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                             <td bgcolor='#FFFFA9' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                            <td valign='center' align='center'>
+                                            <td valign='center' align='center' rowspan='2'>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=CetakBerkasRM&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Cetak RM]</a>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kirim&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kirim]</a><br>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                 <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                             </td>                                
                                          </tr>";
+                                    if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                        echo "<tr class='isi8'>
+                                                <td colspan='3'>
+                                                    <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                        <tr>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>";
+                                    }else{
+                                        echo "<tr class='isi8'>
+                                                <td colspan='3'>
+                                                    <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                        <tr>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                            <td bgcolor='#FFFFA9' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>";
+                                    }
                                 }
                                 $i++;
                             }                                
@@ -132,43 +225,130 @@
                                 if(($statusdata=="Sudah Dikirim")||($statusdata=="Semua")){
                                     if($baris["stts_daftar"]=="Lama"){
                                         echo "<tr class='isi7'>
-                                                <td bgcolor='#74DF00' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                                <td bgcolor='#74DF00' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                 <td bgcolor='#74DF00' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                 <td bgcolor='#74DF00' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                 <td bgcolor='#74DF00' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                                <td valign='center' align='center'>
+                                                <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                 </td>  
                                             </tr>";  
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="Baru"){
                                         echo "<tr class='isi7'>
-                                                <td bgcolor='#FACC2E' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                                <td bgcolor='#FACC2E' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                 <td bgcolor='#74DF00' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                 <td bgcolor='#74DF00' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                 <td bgcolor='#74DF00' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                                <td valign='center' align='center'>
+                                                <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                 </td>  
                                             </tr>";  
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="-"){
                                         echo "<tr class='isi7'>
-                                                <td bgcolor='#74DF00' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                                <td bgcolor='#74DF00' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                 <td bgcolor='#74DF00' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                 <td bgcolor='#74DF00' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                 <td bgcolor='#74DF00' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                                <td valign='center' align='center'>
+                                                <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                 </td>  
-                                            </tr>";  
+                                            </tr>"; 
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#74DF00' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     }
                                     $i++;
                                 }                                 
@@ -176,43 +356,130 @@
                                 if(($statusdata=="Sudah Diterima")||($statusdata=="Semua")){
                                     if($baris["stts_daftar"]=="Lama"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#8888FF' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#8888FF' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#8888FF' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#8888FF' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#8888FF' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="Baru"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FACC2E' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FACC2E' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#8888FF' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#8888FF' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#8888FF' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>   
                                            </tr>"; 
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="-"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#8888FF' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#8888FF' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#8888FF' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#8888FF' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#8888FF' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#8888FF' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     }
                                     $i++;
                                 }
@@ -220,11 +487,11 @@
                                 if(($statusdata=="Sudah Kembali")||($statusdata=="Semua")){
                                     if($baris["stts_daftar"]=="Lama"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FFFFFF' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FFFFFF' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#FFFFFF' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#FFFFFF' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#FFFFFF' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
 
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
@@ -232,32 +499,119 @@
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="Baru"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FACC2E' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FACC2E' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#FFFFFF' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#FFFFFF' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#FFFFFF' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="-"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FFFFFF' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FFFFFF' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#FFFFFF' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#FFFFFF' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#FFFFFF' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>   
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FFFFFF' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     }
                                     $i++;
                                 }
@@ -265,43 +619,130 @@
                                 if(($statusdata=="Tidak Ada")||($statusdata=="Semua")){
                                     if($baris["stts_daftar"]=="Lama"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FF0040' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FF0040' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#FF0040' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#FF0040' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#FF0040' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="Baru"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FACC2E' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FACC2E' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#FF0040' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#FF0040' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#FF0040' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="-"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FF0040' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FF0040' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#FF0040' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#FF0040' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#FF0040' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF0040' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } 
                                     $i++;
                                 }                                   
@@ -309,48 +750,135 @@
                                 if(($statusdata=="Masuk Ranap")||($statusdata=="Semua")){
                                     if($baris["stts_daftar"]=="Lama"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FF66DD' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FF66DD' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#FF66DD' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#FF66DD' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#FF66DD' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="Baru"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FACC2E' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FACC2E' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#FF66DD' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#FF66DD' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#FF66DD' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } else if($baris["stts_daftar"]=="-"){
                                         echo "<tr class='isi7'>
-                                               <td bgcolor='#FF66DD' valign='center'>".$baris["no_rkm_medis"]."</td>
+                                               <td bgcolor='#FF66DD' valign='center' rowspan='2'>".$baris["no_rkm_medis"]."</td>
                                                <td bgcolor='#FF66DD' valign='top'>".$baris["nm_pasien"]."<br>".$baris["almt_pj"]."<br>".$baris["jk"].", Usia ".$baris["umur"]."</td>
                                                <td bgcolor='#FF66DD' valign='top'>".$baris["no_rawat"]." ".$baris["no_reg"]."<br>".$baris["tgl_registrasi"]." ".$baris["jam_reg"]."<br>Status : ".$baris["stts_daftar"]."</td>
                                                <td bgcolor='#FF66DD' valign='top'>".$baris["nm_dokter"]."<br>".$baris["nm_poli"]."<br>Cara Bayar : ".$baris["png_jawab"]."</td>
-                                               <td valign='center' align='center'>
+                                               <td valign='center' align='center' rowspan='2'>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Kembali&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Kembali]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=Permintaan&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Permintaan]</a><br>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=MasukRanap&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Masuk Ranap]</a>
                                                     <a href=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=TidakAda&no_rawat=".$baris["no_rawat"]."&no_rm=".$baris["no_rkm_medis"].">[Tidak Ada]</a>
                                                </td>  
                                            </tr>";
+                                        if($baris2 = mysqli_fetch_array(bukaquery("select * from mutasi_berkas where no_rawat='".$baris["no_rawat"]."'"))) {
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Poli : ".$baris2["dikirim"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Diterima Poli : ".$baris2["diterima"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Kembali RM : ".$baris2["kembali"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Tidak Ada : ".$baris2["tidakada"]."</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Ranap : ".$baris2["ranap"]."</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }else{
+                                            echo "<tr class='isi8'>
+                                                    <td colspan='3'>
+                                                        <table border='0' width='100%' cellpadding='0' cellspacing='0'>
+                                                            <tr>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Diterima Poli : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Kembali RM : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Tidak Ada : 0000-00-00 00:00:00</td>
+                                                                <td bgcolor='#FF66DD' width='20%'>Ke Ranap : 0000-00-00 00:00:00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+                                        }
                                     } 
                                     $i++;
                                 }                                   
                             }
-                        }                                
+                        } 
                     }
             echo "</table>";           
         } else {echo "<table width='100%' border='0' align='center' cellpadding='0' cellspacing='0' class='tbl_form'>
@@ -408,7 +936,7 @@
                 while($baris2 = mysqli_fetch_array($hasil2)) {
                     HapusAll("temporary");
                     InsertData2("temporary", "'0','".$baris2["no_rawat"]."','".$baris2["no_rkm_medis"]."','','".$baris2["no_reg"]."','".$baris2["nm_poli"]."','".$baris2["png_jawab"]."', 
-                            '".$baris2["nm_pasien"]."','".$baris2["almt_pj"]."','".$baris2["nm_dokter"]."','".$baris2["p_jawab"]."','".$baris2["tgl_registrasi"]."','ralan','','','','','','','','','','','','','','','','','','','','','','','','',''");                
+                            '".$baris2["nm_dokter"]."','".$baris2["nm_pasien"]."','".$baris2["almt_pj"]."','".$baris2["p_jawab"]."','".$baris2["tgl_registrasi"]."','ralan','','','','','','','','','','','','','','','','','','','','','','','','',''");                
                 }            
             }            
             echo "<meta http-equiv='refresh' content='1;URL=?act=List&keyword=".str_replace(" ","_",$keyword)."&dokter=".str_replace(" ","_",$dokter)."&poli=".str_replace(" ","_",$poli)."&statusdata=".str_replace(" ","_",$statusdata)."&tahunawal=$tahunawal&bulanawal=$bulanawal&tanggalawal=$tanggalawal&tahunakhir=$tahunakhir&bulanakhir=$bulanakhir&tanggalakhir=$tanggalakhir&action=no'>";                 
@@ -472,7 +1000,7 @@
                         Dokter : 
                         <select name="dokter" class="text5">
                             <?php
-                                $_sql = "SELECT nm_dokter FROM dokter  ORDER BY nm_dokter";
+                                $_sql = "SELECT dokter.nm_dokter FROM dokter  ORDER BY dokter.nm_dokter";
                                 $hasil=bukaquery($_sql);
                                 if(!empty($dokter)){
                                     echo "<option value='$dokter'>$dokter</option>";
@@ -506,7 +1034,7 @@
                         Unit/Poli : 
                         <select name="poli" class="text5">
                             <?php
-                                $_sql = "SELECT nm_poli FROM poliklinik  ORDER BY nm_poli";
+                                $_sql = "SELECT poliklinik.nm_poli FROM poliklinik  ORDER BY poliklinik.nm_poli";
                                 $hasil=bukaquery($_sql);
                                 if(!empty($poli)){
                                     echo "<option value='$poli'>$poli</option>";
@@ -518,7 +1046,7 @@
                             ?>
                         </select>
                         &nbsp;&nbsp;
-                        Keyword : <input name="keyword" class="text" type="text" value="<?php echo $keyword;?>" size="47" maxlength="250" autofocus />
+                        Keyword : <input name="keyword" class="text" type="text" value="<?php echo $keyword;?>" size="47" maxlength="250" pattern="[a-zA-Z0-9, ./@_]{1,200}" title=" a-zA-Z0-9, ./@_ (Maksimal 200 karakter)" autocomplete="off" autofocus />
                         <input name=BtnCari type=submit class="button" value="&nbsp;&nbsp;Cari&nbsp;&nbsp;" />&nbsp;&nbsp;&nbsp;
                         Record : <input name="record" class="text6" type="text" value="<?php echo $i;?>" size="5" maxlength="5" />&nbsp;&nbsp;
                         <input name=BtnKeluar type=submit class="button" value="&nbsp;&nbsp;&nbsp;Keluar&nbsp;&nbsp;&nbsp;" />
